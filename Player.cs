@@ -274,7 +274,7 @@ namespace Project1
                 velocity_x_target = 0;
             }
 
-            if (punched && (kstate.IsKeyUp(Keys.F) || Mouse.GetState().LeftButton == ButtonState.Released))
+            if (punched && (kstate.IsKeyUp(Keys.F) && Mouse.GetState().LeftButton == ButtonState.Released))
                 punched = false;
 
             if ((kstate.IsKeyDown(Keys.F) || Mouse.GetState().LeftButton == ButtonState.Pressed) && !punched) 
@@ -309,7 +309,7 @@ namespace Project1
                     e.x += DIRECTION;
                     e.DIRECTION = DIRECTION;
                     e.velocity_y += 0.7f;
-                    game.particleBlast(e.x, e.y);
+                    game.particleBlast(e.x, e.y, 5);
                 }
                 //e.DEAD = true;
 

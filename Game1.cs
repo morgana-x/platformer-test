@@ -127,6 +127,8 @@ namespace Project1
 
             base.Initialize();
             this.Window.Title = "Platformer Test";
+            this.Window.AllowUserResizing= true;
+            
             LoadEntities();
 
 

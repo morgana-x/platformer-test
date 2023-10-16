@@ -110,7 +110,7 @@ namespace Project1
                 if (z > 100)
                 {
                     CLEARED = true;
-                    game.particleBlast(x + z, y + z, 10);
+                    game.particleBlast(x + (z * DIRECTION), y + z, 10);
                 }
                 //game.enemies.Remove(this);
             }
