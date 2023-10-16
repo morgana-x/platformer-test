@@ -230,13 +230,13 @@ namespace Project1
         public void input()
         {
             KeyboardState kstate = Keyboard.GetState();
-            if (kstate.IsKeyDown(Keys.Up))
+            if (kstate.IsKeyDown(Keys.Up) || kstate.IsKeyDown(Keys.W))
             {
                 //Block b = collisionBlockCheck(game.blocks);
                 if (!IN_AIR)
                     velocity_y += max_velocity_y;
             }
-            if (kstate.IsKeyDown(Keys.Down))
+            if (kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
             {
                 Block b = collisionBlockCheck(game.blocks);
                 if (b == null)
@@ -257,13 +257,13 @@ namespace Project1
                 }
                 
             }
-            if (kstate.IsKeyDown(Keys.Left))
+            if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
             {
                 DIRECTION = -1;
                 if (!collisionCheck(game.blocks, velocity_x, 0));
                     velocity_x_target = -max_velocity_x;
             }
-            else if (kstate.IsKeyDown(Keys.Right))
+            else if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
             {
                 DIRECTION = 1;
                 if (!collisionCheck(game.blocks, velocity_x, 0)) ;
