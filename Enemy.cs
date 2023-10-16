@@ -24,7 +24,7 @@ namespace Project1
         public int DIRECTION = 1;
         public bool DEAD = false;
         public bool CLEARED = false;
-
+       
         public int z = 1;
         public float velocity_x_target = 0;
 
@@ -95,8 +95,8 @@ namespace Project1
             //batch.Draw(game.playerTexture, basePosition, Color.White);
             if (CLEARED)
                 return;
-            float zoom = (z > 1 ?  1 + (z) : 0);
-            batch.Draw(getSprite(), new Rectangle((int)(basePosition.X + zoom), (int)(basePosition.Y + -zoom), (int)(game.playerTexture_main.Width * cam.zoom ), (int)(game.playerTexture_main.Height * cam.zoom)), Color.White);
+            float zoom = (z > 1 ?  1 + (z * cam.zoom) : 0);
+            batch.Draw(getSprite(), new Rectangle((int)(basePosition.X + (zoom * DIRECTION)), (int)(basePosition.Y + -zoom), (int)(game.playerTexture_main.Width * cam.zoom ), (int)(game.playerTexture_main.Height * cam.zoom)), Color.White);
            // Weapons.Weapon currentWeapon = weapon;// getCurrentWeapon();
             //if (currentWeapon == null)
            //     return;
@@ -108,7 +108,10 @@ namespace Project1
             {
                 z++;
                 if (z > 100)
+                {
                     CLEARED = true;
+                    game.particleBlast(x + z, y + z, 10);
+                }
                 //game.enemies.Remove(this);
             }
 
@@ -206,7 +209,8 @@ namespace Project1
             e.velocity_x += DIRECTION * 19f;
             e.x += DIRECTION;
             e.velocity_y += 0.7f;
-                //e.DEAD = true;
+            game.particleBlast(e.x, e.y);
+            //e.DEAD = true;
         }
         public bool collide(Player b)
         {

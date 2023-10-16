@@ -40,6 +40,9 @@ namespace Project1
 
         public int invincibility = 0;
 
+        public bool PUNCHING = false;
+        public int punchLeft = 0;
+
         public List<Weapons.Weapon> weapons = new List<Weapons.Weapon>();
         public Game1 game;
         public Player(Game1 game) //: base(game)
@@ -54,6 +57,8 @@ namespace Project1
         {
             if (IN_AIR)
                 return game.playerTexture_jumping;
+            if (PUNCHING)
+                return game.playerTexture_punch;
             if (WALKING)
             {
                 nextWalk++;
@@ -107,16 +112,25 @@ namespace Project1
                 return;
             this.health -= damage;
             invincibility = 50;
-            if (this.health > 1) 
+            /*if (this.health > 1) 
             {
                 this.health = 1;
-            }
+            }*/
         }
         public void think()
         {
-
+            pickUps();
             if (invincibility > 0)
                 invincibility--;
+            if (punchLeft > 0)
+            {
+       
+                punchLeft--;
+                if (punchLeft == 0)
+                    PUNCHING = false;
+                punchThink();
+            }
+
             WALKING = (velocity_x_target != 0);
             Block b = collisionBlockCheck(game.blocks, 0, -1);
             if (b != null)
@@ -276,17 +290,47 @@ namespace Project1
         public bool punched = false;
         public void punch()
         {
-            foreach(Enemy e in game.enemies)
+            PUNCHING = true;
+            punchLeft = 5;
+      
+        }
+        public void punchThink()
+        {
+            foreach (Enemy e in game.enemies)
             {
-                if (Math.Abs(e.x - x) < w * 1.1f)
+                if (e.DEAD) continue;
+                if (e.CLEARED) continue;
+                float dX = (e.x - x);
+                bool inFront = (dX < 0 && DIRECTION < 0) || (dX > 0 && DIRECTION > 0 ) || false;
+                if (inFront && (Math.Abs((e.x - x)) + Math.Abs(e.y - y) < w * 2f))
                 {
                     e.damage(0.5f);
                     e.velocity_x += DIRECTION * 19f;
                     e.x += DIRECTION;
+                    e.DIRECTION = DIRECTION;
                     e.velocity_y += 0.7f;
+                    game.particleBlast(e.x, e.y);
                 }
-                    //e.DEAD = true;
-                
+                //e.DEAD = true;
+
+            }
+        }
+
+        public void pickUps()
+        {
+            if (this.health >= 1)
+                return;
+            foreach(HeartPickup e in game.heartPickups)
+            {
+                if (e.CULLED)
+                    continue;
+                if (Math.Abs(e.x - x) + Math.Abs(e.y -y )  < 5)
+                {
+                    this.health += e.health;
+                    if (this.health > 1)
+                        this.health = 1;
+                    e.kill();
+                }
             }
         }
         public void shoot()
